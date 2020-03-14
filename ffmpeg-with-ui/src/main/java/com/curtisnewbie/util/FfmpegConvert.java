@@ -1,6 +1,9 @@
 package com.curtisnewbie.util;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.*;
 
 import com.curtisnewbie.controller.Loggable;
@@ -65,6 +68,7 @@ public class FfmpegConvert {
             // slash + fileName(f) + "." + format;
             String cmd = "ffmpeg -y -i " + f + " " + outputFilename;
             Process p = runtime.exec(new String[] { cli_name, parseAsString, cmd });
+            displayProcessOutput(p);
             if (p.waitFor() == 0) {
                 logger.appendResult("[Success]: " + outputFilename);
             } else {
@@ -99,5 +103,23 @@ public class FfmpegConvert {
 
     private static boolean isWinOS() {
         return System.getProperty("os.name").toLowerCase().contains("win");
+    }
+
+    static void displayProcessOutput(Process process) {
+        displayStream(process.getErrorStream());
+        displayStream(process.getInputStream());
+    }
+
+    static void displayStream(InputStream in) {
+        new Thread(() -> {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(in));) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    System.out.println(line);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 }
