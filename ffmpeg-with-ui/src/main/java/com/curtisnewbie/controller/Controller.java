@@ -54,6 +54,7 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.resultTextArea.setEditable(false);
         this.logger = new Logger(this);
         registerSelectInDirEventHandler();
         registerSelectOutDirEventHandler();
@@ -89,6 +90,8 @@ public class Controller implements Initializable {
             var outDir = getOutDir();
             var format = getFormat();
             if (notNullnHasChar(inDir) && notNullnHasChar(outDir) && notNullnHasChar(format)) {
+                // reset
+                this.resultTextArea.setText("");
                 new Thread(() -> {
                     FfmpegConvert.convert(inDir, outDir, format, this.logger);
                 }).start();
