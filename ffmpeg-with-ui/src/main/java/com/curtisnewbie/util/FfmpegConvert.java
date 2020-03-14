@@ -57,17 +57,15 @@ public class FfmpegConvert {
         Runtime runtime = Runtime.getRuntime();
         logger.appendResult("Start Processing - " + new Date().toString());
         for (String f : inFiles) {
-            String cmd = "ffmpeg -i " + f + " -vcodec copy -acodec copy " + outDir + slash + fileName(f) + "." + format;
+            // codec copy doesn't work for all media files
+            // String cmd = "ffmpeg -i " + f + " -vcodec copy -acodec copy " + outDir +
+            // slash + fileName(f) + "." + format;
+            String cmd = "ffmpeg -i " + f + " " + outDir + slash + fileName(f) + "." + format;
             Process p = runtime.exec(new String[] { cli_name, parseAsString, cmd });
             if (p.waitFor() == 0) {
                 logger.appendResult("[Success]: " + f);
             } else {
-                // try again without copying codec
-                cmd = "ffmpeg -i " + f + " " + outDir + slash + fileName(f) + "." + format;
-                if (runtime.exec(new String[] { cli_name, parseAsString, cmd }).waitFor() == 0)
-                    logger.appendResult("[Success]: " + f);
-                else
-                    logger.appendResult("[Failed]: " + f);
+                logger.appendResult("[Failed]: " + f);
             }
         }
         logger.appendResult("Finish Processing - " + new Date().toString());
