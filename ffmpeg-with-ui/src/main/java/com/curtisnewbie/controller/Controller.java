@@ -52,6 +52,8 @@ public class Controller implements Initializable {
 
     private Loggable logger;
 
+    private Thread currentTask;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.resultTextArea.setEditable(false);
@@ -90,11 +92,16 @@ public class Controller implements Initializable {
             var outDir = getOutDir();
             var format = getFormat();
             if (notNullnHasChar(inDir) && notNullnHasChar(outDir) && notNullnHasChar(format)) {
-                // reset
-                this.resultTextArea.setText("");
-                new Thread(() -> {
-                    FfmpegConvert.convert(inDir, outDir, format, this.logger);
-                }).start();
+                if (currentTask == null || !currentTask.isAlive()) {
+                    // reset
+                    this.resultTextArea.setText("");
+                    currentTask = new Thread(() -> {
+                        FfmpegConvert.convert(inDir, outDir, format, this.logger);
+                    });
+                    currentTask.start();
+                } else {
+                    showError("Previous conversion is not finished, new conversion aborted.");
+                }
             }
         });
     }
