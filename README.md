@@ -4,7 +4,7 @@
 
 Essentially, it is doing following command for every file in the selected input directory:
 
-    ffmpeg -i fileToBeConverted.mov -vcodec copy -acodec copy convertedFile.mp4
+    ffmpeg -y -i fileToBeConverted.mov convertedFile.mp4
 
 **This tool only works on Linux, as I am using BASH.**
 
