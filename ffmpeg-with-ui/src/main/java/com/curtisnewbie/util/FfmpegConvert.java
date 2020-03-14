@@ -34,12 +34,12 @@ public class FfmpegConvert {
     public static void convert(String inDir, String outDir, String format, Loggable logger) {
         var inDirFile = new File(inDir);
         if (!inDirFile.exists() && !inDirFile.isDirectory()) {
-            logger.error("Input Directory does not exist or it is not a directory");
+            logger.error("Input directory does not exist or it is not a directory");
             return;
         }
         var outDirFile = new File(outDir);
         if (!outDirFile.exists() && !outDirFile.isDirectory()) {
-            logger.error("Output Directory does not exists or it is not a directory");
+            logger.error("Output directory does not exist or it is not a directory");
             return;
         }
 
