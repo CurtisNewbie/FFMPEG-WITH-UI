@@ -20,4 +20,4 @@ e.g.,
 
 ## Demo
 
-<img src="https://user-images.githubusercontent.com/45169791/76686947-83d0c680-6617-11ea-8106-560c615d9dcf.png">
+<img src="https://user-images.githubusercontent.com/45169791/76688205-ae744c80-6622-11ea-9027-c30bab145b55.gif">
