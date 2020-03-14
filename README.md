@@ -4,9 +4,19 @@
 
 Essentially, it is doing following command for every file in the selected input directory:
 
+    e.g.,
+
+    ffmpeg -y -i fileToBeConverted.mov -c copy convertedFile.mp4
+
+    or
+    
     ffmpeg -y -i fileToBeConverted.mov convertedFile.mp4
 
-**This tool only works on Linux, as I am using BASH.**
+**This tool works on Linux and Windows OS**
+
+### Prerequisite
+
+- Java 11
 
 ## How to use it
 
