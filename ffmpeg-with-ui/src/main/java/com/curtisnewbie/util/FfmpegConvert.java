@@ -47,7 +47,9 @@ public class FfmpegConvert {
         for (File f : inDirFile.listFiles())
             inFiles.add(f.getAbsolutePath());
         try {
+            logger.info("Processing started, this may take a while, please wait for notification.");
             convert(inFiles, outDir, format, logger);
+            logger.info("Done!");
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
