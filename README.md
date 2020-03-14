@@ -12,7 +12,7 @@ Essentially, it is doing following command for every file in the selected input 
     
     ffmpeg -y -i fileToBeConverted.mov convertedFile.mp4
 
-**This tool works on Linux and Windows OS**
+**This tool works on Linux and Windows OS. Notice that this program has no control over FFMPEG, if you decide to kill this Java program before the FFMPEG stops, it will continue to run until it has done its job.**
 
 ### Prerequisite
 
@@ -26,7 +26,7 @@ Essentially, it is doing following command for every file in the selected input 
 
 e.g.,
     
-    java -jar ffmpeg-with-ui-1.0-SNAPSHOT.jar
+    java -jar ffmpeg-with-ui-1.0.1.jar
 
 ## Demo
 
