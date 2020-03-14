@@ -62,7 +62,12 @@ public class FfmpegConvert {
             if (p.waitFor() == 0) {
                 logger.appendResult("[Success]: " + f);
             } else {
-                logger.appendResult("[Failed]: " + f);
+                // try again without copying codec
+                cmd = "ffmpeg -i " + f + " " + outDir + slash + fileName(f) + "." + format;
+                if (runtime.exec(new String[] { cli_name, parseAsString, cmd }).waitFor() == 0)
+                    logger.appendResult("[Success]: " + f);
+                else
+                    logger.appendResult("[Failed]: " + f);
             }
         }
         logger.appendResult("Finish Processing - " + new Date().toString());
