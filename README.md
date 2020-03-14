@@ -1,8 +1,8 @@
 # FFMPEG-WITH-UI
 
-**Simple tool that converts all files in a directory to specified format using FFMPEG CLI. The converted files are of their orginal names. This program comes with a UI, it's for my girlfriend.**
+**Simple tool that converts all files in the specified input directory to specified format using FFMPEG CLI. The converted files are of their orginal names (except the file extension), and are placed inside the specified output directory. This program comes with a UI, it's for my girlfriend :D.**
 
-Essentially, it is doing following command for every file in the directory:
+Essentially, it is doing following command for every file in the selected input directory:
 
     ffmpeg -i fileToBeConverted.mov -vcodec copy -acodec copy convertedFile.mp4
 
@@ -11,19 +11,13 @@ Essentially, it is doing following command for every file in the directory:
 ## How to use it
 
 - Install FFMPEG library
-- Compile this tool using javac
+- Download the executable in RELEASE
+- Run it as follows:
 
 e.g.,
+    
+    java -jar ffmpeg-with-ui-1.0-SNAPSHOT.jar
 
-    javac FfmpegConvert.java
+## Demo
 
-- Run it, and provides three arguments:
-  - [0] input directory, which contains all the files that you want to convert
-  - [1] output directory, where the files are created
-  - [2] format, e.g., "mp4"
-
-e.g.,
-
-    java FfmpegConvert /home/yongjie/in /home/yongjie/tempOut mp4
-
-Then all the files in _/home/yongjie/in_ are converted to mp4 format and generated in _/home/yongjie/tempOut_.
+<img src="https://user-images.githubusercontent.com/45169791/76686947-83d0c680-6617-11ea-8106-560c615d9dcf.png">
