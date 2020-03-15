@@ -51,16 +51,16 @@ public class FfmpegConvert {
             inFiles.add(f.getAbsolutePath());
         try {
             logger.info("Processing started, this may take a while, please wait for notification.");
-            convert(inFiles, outDir, format, logger);
+            convert(inFiles, outDir, format);
             logger.info("Done!");
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
     }
 
-    static void convert(List<String> inFiles, String outDir, String format, Loggable logger) throws Exception {
+    static void convert(List<String> inFiles, String outDir, String format) throws Exception {
         Runtime runtime = Runtime.getRuntime();
-        logger.appendResult("Start Processing - " + new Date().toString());
+        System.out.println("Start Processing - " + new Date().toString());
         for (String f : inFiles) {
             String outputFilename = outDir + slash + fileName(f) + "." + format;
             // codec copy doesn't work for all media files
@@ -68,19 +68,19 @@ public class FfmpegConvert {
             Process p = runtime.exec(new String[] { cli_name, parseAsString, cmd });
             displayProcessOutput(p);
             if (p.waitFor() == 0) {
-                logger.appendResult("[Success]: " + outputFilename);
+                System.out.println("[Success]: " + outputFilename);
             } else {
                 // try again without codec copy
-                logger.appendResult("[Failed]: " + outputFilename);
-                logger.appendResult("[Try again without codec copy]: " + outputFilename);
+                System.out.println("[Failed]: " + outputFilename);
+                System.out.println("[Try again without codec copy]: " + outputFilename);
                 cmd = "ffmpeg -y -i " + f + " " + outputFilename;
                 if (runtime.exec(new String[] { cli_name, parseAsString, cmd }).waitFor() == 0)
-                    logger.appendResult("[Success]: " + outputFilename);
+                    System.out.println("[Success]: " + outputFilename);
                 else
-                    logger.appendResult("[Failed]: " + outputFilename);
+                    System.out.println("[Failed]: " + outputFilename);
             }
         }
-        logger.appendResult("Finish Processing - " + new Date().toString());
+        System.out.println("Finish Processing - " + new Date().toString());
     }
 
     static String fileName(String path) {
@@ -118,9 +118,16 @@ public class FfmpegConvert {
     static void displayStream(InputStream in) {
         new Thread(() -> {
             try (BufferedReader br = new BufferedReader(new InputStreamReader(in));) {
+                StringBuilder sb = new StringBuilder();
+                int count = 6;
                 String line;
                 while ((line = br.readLine()) != null) {
-                    System.out.println(line);
+                    sb.append(line + "\n");
+                    if (--count <= 0) {
+                        count = 6;
+                        System.out.print(sb.toString());
+                        sb.setLength(0);
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();

@@ -1,6 +1,9 @@
 package com.curtisnewbie.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -54,13 +57,22 @@ public class Controller implements Initializable {
 
     private Thread currentTask;
 
+    private PrintStream printStream;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // for resultTextArea
         this.resultTextArea.setEditable(false);
+        this.resultTextArea.setWrapText(true);
+        // for logger
         this.logger = new Logger(this);
+        // for event handlers
         registerSelectInDirEventHandler();
         registerSelectOutDirEventHandler();
         registerConvertEventHandler();
+        // redirect outputstream from console to textarea
+        this.printStream = new PrintStream(new ConsoleOutputStream(resultTextArea));
+        System.setOut(printStream);
     }
 
     /**
@@ -191,7 +203,7 @@ public class Controller implements Initializable {
     }
 
     /**
-     * For logging any info or error occured during convertion.
+     * Create alert dialog for logging any info or error occured during convertion.
      */
     class Logger implements Loggable {
 
@@ -199,11 +211,6 @@ public class Controller implements Initializable {
 
         public Logger(Controller controller) {
             this.controller = controller;
-        }
-
-        @Override
-        public void appendResult(String msg) {
-            controller.appendResultTextArea(msg + "\n");
         }
 
         @Override
@@ -217,4 +224,26 @@ public class Controller implements Initializable {
         }
     }
 
+    /**
+     * Redirect System.out from console to resultTextArea
+     */
+    class ConsoleOutputStream extends OutputStream {
+
+        private TextArea console;
+
+        public ConsoleOutputStream(TextArea textArea) {
+            this.console = textArea;
+        }
+
+        public void appendText(String text) {
+            Platform.runLater(() -> {
+                console.appendText(text);
+            });
+        }
+
+        @Override
+        public void write(int b) throws IOException {
+            appendText(String.valueOf((char) b));
+        }
+    }
 }
