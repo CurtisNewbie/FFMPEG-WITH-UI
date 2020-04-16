@@ -26,7 +26,7 @@ Essentially, it is doing following command for every file in the selected input 
 
 e.g.,
 
-    java -jar ffmpeg-with-ui-1.0.1.jar
+    java -jar ffmpeg-with-ui-1.0.2.jar
 
 ## Demo
 
