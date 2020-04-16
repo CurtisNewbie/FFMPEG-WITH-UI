@@ -63,7 +63,7 @@ public class FfmpegConvert {
         Runtime runtime = Runtime.getRuntime();
         System.out.println("Start Processing - " + new Date().toString());
         for (File f : files) {
-            String outputFilename = outDir + slash + f.getName() + "." + format;
+            String outputFilename = outDir + slash + fileName(f.getName()) + "." + format;
 
             // codec copy doesn't work for all media files
             String cmd = String.format("ffmpeg -y -i '%s' -c copy '%s'", f.getAbsolutePath(), outputFilename);
@@ -75,7 +75,7 @@ public class FfmpegConvert {
                 // try again without codec copy
                 System.out.println("[Failed]: " + outputFilename);
                 System.out.println("[Try again without codec copy]: " + outputFilename);
-                cmd = "ffmpeg -y -i " + f + " " + outputFilename;
+                cmd = String.format("ffmpeg -y -i '%s' '%s'", f, outputFilename);
                 if (runtime.exec(new String[] { cli_name, parseAsString, cmd }).waitFor() == 0)
                     System.out.println("[Success]: " + outputFilename);
                 else
@@ -83,6 +83,20 @@ public class FfmpegConvert {
             }
         }
         System.out.println("Finish Processing - " + new Date().toString());
+    }
+
+    static String fileName(String path) {
+        int start = 0;
+        int end = path.length();
+        for (int i = path.length() - 1; i >= 0; i--) {
+            if (path.charAt(i) == '.' && end == path.length()) {
+                end = i;
+            } else if (path.charAt(i) == slash) {
+                start = i + 1;
+                break;
+            }
+        }
+        return path.substring(start, end);
     }
 
     static void displayLog(List<String> log) {
