@@ -46,9 +46,10 @@ public class FfmpegConvert {
             return;
         }
 
-        List<String> inFiles = new ArrayList<>();
+        List<File> inFiles = new ArrayList<>();
         for (File f : inDirFile.listFiles())
-            inFiles.add(f.getAbsolutePath());
+            if (f.isFile())
+                inFiles.add(f);
         try {
             logger.info("Processing started, this may take a while, please wait for notification.");
             convert(inFiles, outDir, format);
@@ -58,13 +59,14 @@ public class FfmpegConvert {
         }
     }
 
-    static void convert(List<String> inFiles, String outDir, String format) throws Exception {
+    static void convert(List<File> files, String outDir, String format) throws Exception {
         Runtime runtime = Runtime.getRuntime();
         System.out.println("Start Processing - " + new Date().toString());
-        for (String f : inFiles) {
-            String outputFilename = outDir + slash + fileName(f) + "." + format;
+        for (File f : files) {
+            String outputFilename = outDir + slash + f.getName() + "." + format;
+
             // codec copy doesn't work for all media files
-            String cmd = "ffmpeg -y -i " + f + " -c copy " + outDir + slash + fileName(f) + "." + format;
+            String cmd = String.format("ffmpeg -y -i '%s' -c copy '%s'", f.getAbsolutePath(), outputFilename);
             Process p = runtime.exec(new String[] { cli_name, parseAsString, cmd });
             displayProcessOutput(p);
             if (p.waitFor() == 0) {
@@ -81,23 +83,6 @@ public class FfmpegConvert {
             }
         }
         System.out.println("Finish Processing - " + new Date().toString());
-    }
-
-    static String fileName(String path) {
-        int start = -1;
-        int end = -1;
-        for (int i = path.length() - 1; i > 0; i--) {
-            if (path.charAt(i) == '.' && end < 0) {
-                end = i;
-            } else if (path.charAt(i) == slash) {
-                start = i + 1;
-                break;
-            }
-        }
-        if (start < 0 || end < 0)
-            throw new IllegalArgumentException("File name cannot be parsed");
-
-        return path.substring(start, end);
     }
 
     static void displayLog(List<String> log) {
